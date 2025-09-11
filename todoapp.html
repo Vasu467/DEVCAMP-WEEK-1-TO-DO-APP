@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple To-Do List</title>
+  <style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container{
+        width: 100%;
+        min-height: 100vh;
+        padding: 10px;
+        background: linear-gradient(135deg, red ,blue);
+    }
+    .todo-app{
+        width: 100%;
+        max-width: 540px;
+        background-color: rgb(255, 255, 255);
+        margin: 100px auto 20px;
+        padding: 40px 30px 70px;
+        border-radius: 10px;
+    }
+    .input-but{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 25px;
+      padding-left: 20px;
+      border-radius: 30px;
+      background-color: #edeef0;
+    }
+    input{
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      padding: 10px;
+      font-weight: 14px;
+      margin-right: 190px;
+    }    
+    button {
+      padding: 8px 12px;
+      border: none;
+      background: #28a745;
+      color: white;
+      cursor: pointer;
+      border-radius: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="todo-app">
+      <h1 style="text-align: center;">My To-Do List</h1>
+      <div class="input-but">
+        <form id="taskList">
+          <input id="taskInput" type="text" name="task" placeholder="Enter new task" required>
+          <button type="submit" onclick="addTask()">Add Task</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <ol id="taskList"></ol>
+  <script>
+    window.onload = function() {
+      let saved = localStorage.getItem("tasks");
+      if (saved) {
+        document.getElementById("taskList").innerHTML = saved;
+      }
+    }
+    function addTask() {
+      let input = document.getElementById("taskInput");
+      let taskText = input.value;
+      if (taskText === "") {
+        alert("Please enter something!");
+        return;
+      }
+      let li = document.createElement("li");
+      li.innerHTML = taskText + " <button onclick='editTask(this)'>Edit</button> <button onclick='deleteTask(this)'>Delete</button>";
+      document.getElementById("taskList").appendChild(li);
+      input.value = "";
+      saveTasks();
+    }
+    function deleteTask(btn) {
+      let li = btn.parentElement;
+      li.remove();
+      saveTasks();
+    }
+    function editTask(btn) {
+      let li = btn.parentElement;
+      let newText = prompt("Edit your task:", li.firstChild.textContent);
+      if (newText) {
+        li.firstChild.textContent = newText;
+        saveTasks();
+      }
+    }
+    function saveTasks() {
+      localStorage.setItem("tasks", document.getElementById("taskList").innerHTML);
+    }
+  </script>
+</body>
+</html>
