@@ -38,7 +38,7 @@
       background: transparent;
       padding: 10px;
       font-weight: 14px;
-      margin-right: 190px;
+      margin-right: 195px;
     }    
     button {
       padding: 8px 12px;
@@ -48,6 +48,7 @@
       cursor: pointer;
       border-radius: 30px;
     }
+    
   </style>
 </head>
 <body>
@@ -55,7 +56,7 @@
     <div class="todo-app">
       <h1 style="text-align: center;">My To-Do List</h1>
       <div class="input-but">
-        <form id="taskList">
+        <form id="taskForm">
           <input id="taskInput" type="text" name="task" placeholder="Enter new task" required>
           <button type="submit" onclick="addTask()">Add Task</button>
         </form>
@@ -79,7 +80,7 @@
       }
       let li = document.createElement("li");
       li.innerHTML = taskText + " <button onclick='editTask(this)'>Edit</button> <button onclick='deleteTask(this)'>Delete</button>";
-      document.getElementById("taskList").appendChild(li);
+      document.getElementById("taskForm").appendChild(li);
       input.value = "";
       saveTasks();
     }
