@@ -1,54 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Simple To-Do List</title>
+  <title>gemini</title>
   <style>
     *{
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
     .container{
-        width: 100%;
-        min-height: 100vh;
-        padding: 10px;
-        background: linear-gradient(135deg, red ,blue);
+      width: 100%;
+      min-height: 100vh;
+      padding: 10px;
+      background: linear-gradient(135deg, red ,blue);
     }
     .todo-app{
-        width: 100%;
-        max-width: 540px;
-        background-color: rgb(255, 255, 255);
-        margin: 100px auto 20px;
-        padding: 40px 30px 70px;
-        border-radius: 10px;
+      width: 100%;
+      max-width: 540px;
+      background-color: rgb(255, 255, 255);
+      margin: 100px auto 20px;
+      padding: 40px 30px 70px;
+      border-radius: 10px;
     }
     .input-but{
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 25px;
+      margin-bottom: 10px; 
       padding-left: 20px;
       border-radius: 30px;
       background-color: #edeef0;
     }
-    input{
+    input{ 
       flex: 1;
       border: none;
       outline: none;
       background: transparent;
       padding: 10px;
-      font-weight: 14px;
-      margin-right: 195px;
-    }    
+      font-size: 14px; 
+      width: 377px;
+    }
     button {
-      padding: 8px 12px;
+      padding: 10px 12px;
       border: none;
       background: #28a745;
       color: white;
       cursor: pointer;
       border-radius: 30px;
+      margin-left: auto;
     }
-    
+    #taskList {
+      list-style: none;
+      padding: 0;
+      margin-top: 25px; 
+    }
+    #taskList li {
+      padding: 10px 8px 10px 50px;
+      font-size: 17px;
+      background: #f1f1f1;
+      margin-bottom: 8px;
+      border-radius: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #taskList li button {
+      padding: 5px 10px;
+      font-size: 14px;
+      margin-left: 10px;
+    }
   </style>
 </head>
 <body>
@@ -58,47 +77,68 @@
       <div class="input-but">
         <form id="taskForm">
           <input id="taskInput" type="text" name="task" placeholder="Enter new task" required>
-          <button type="submit" onclick="addTask()">Add Task</button>
+          <button type="submit">Add Task</button>
         </form>
       </div>
+      <ol id="taskList"></ol> 
     </div>
   </div>
-  <ol id="taskList"></ol>
   <script>
+    const taskInput = document.getElementById("taskInput");
+    const taskForm = document.getElementById("taskForm");
+    const taskList = document.getElementById("taskList");
+    
     window.onload = function() {
       let saved = localStorage.getItem("tasks");
       if (saved) {
-        document.getElementById("taskList").innerHTML = saved;
+        taskList.innerHTML = saved;
       }
     }
+
+    taskForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      addTask();
+    });
+
     function addTask() {
-      let input = document.getElementById("taskInput");
-      let taskText = input.value;
+      let taskText = taskInput.value.trim();
       if (taskText === "") {
         alert("Please enter something!");
         return;
       }
       let li = document.createElement("li");
-      li.innerHTML = taskText + " <button onclick='editTask(this)'>Edit</button> <button onclick='deleteTask(this)'>Delete</button>";
-      document.getElementById("taskForm").appendChild(li);
-      input.value = "";
+      li.innerHTML = `
+        <span>${taskText}</span>
+        <div>
+          <button onclick='editTask(this)'>Edit</button> 
+          <button onclick='deleteTask(this)'>Delete</button>
+        </div>
+      `; 
+      taskList.appendChild(li); 
+      taskInput.value = "";
       saveTasks();
     }
+
     function deleteTask(btn) {
-      let li = btn.parentElement;
-      li.remove();
-      saveTasks();
-    }
-    function editTask(btn) {
-      let li = btn.parentElement;
-      let newText = prompt("Edit your task:", li.firstChild.textContent);
-      if (newText) {
-        li.firstChild.textContent = newText;
+      let li = btn.closest('li');
+      if (li) {
+        li.remove();
         saveTasks();
       }
     }
+
+    function editTask(btn) {
+      let li = btn.closest('li');
+      let taskSpan = li.querySelector('span'); 
+      let newText = prompt("Edit your task:", taskSpan.textContent.trim()); 
+      if (newText !== null && newText.trim() !== "") {
+        taskSpan.textContent = newText.trim();
+        saveTasks();
+      }
+    }
+        
     function saveTasks() {
-      localStorage.setItem("tasks", document.getElementById("taskList").innerHTML);
+      localStorage.setItem("tasks", taskList.innerHTML);
     }
   </script>
 </body>
